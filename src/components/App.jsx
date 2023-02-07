@@ -9,33 +9,38 @@ import './App.module.css';
 // import {LoginForm} from './LoginForm/LoginForm'
 // import { ProductReviewForm } from './ProductReviewForm/ProductReviewForm';
 
-
-
-
-
-
 export class App extends Component {
 
-  nameInputId = nanoid();
-
+ 
   state = {
-    contacts: [
-      // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
+     
     filter: '',
   };
 
-  // formSubmitHandler = data => {
-  //   console.log(data);
-  // };
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+        if (parsedContacts) {
+          this.setState({ contacts: parsedContacts});
+        }
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    
+    if (this.state.contacts !== prevState.contacts) {
+      
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+
+    }
+   
+  }
 
   formSubmitHandler = ({name, number}) => {
-    // console.log(name);
+   
     const contact = {
-      id: this.nameInputId,
+      id:nanoid(),
       name,
       number,
     };
@@ -51,10 +56,7 @@ export class App extends Component {
           contacts: [contact, ...contacts],
         }));
 
-    // this.setState(({ contacts }) => ({
-      
-    //   contacts: [contact, ...contacts]
-    // }))
+    
   };
   
   changeFilter = e => {
@@ -73,9 +75,9 @@ export class App extends Component {
   };
   
 
-  deleteContact = contactId => {
+    deleteContact = id => {
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
 
@@ -84,9 +86,12 @@ export class App extends Component {
   
 
  render () {
+
+  
    const {filter} = this.state;
    
    const visibleContacts = this.getVisibleContacts();
+   
   return (
     <section>
     <h1>Phonebook</h1>
