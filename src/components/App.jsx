@@ -49,7 +49,7 @@ export class App extends Component {
           i.number === contact.number) || i.number === contact.number);
           console.log(isExist)
           if (isExist) {
-            return alert(`${name} is already in contacts`)
+             alert(`${name} is already in contacts`)
           }
      
           else {this.setState(({ contacts }) => ({
